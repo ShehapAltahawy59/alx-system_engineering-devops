@@ -1,2 +1,2 @@
 #!/bin/bash
-ls -1p | sort -f | awk '{if (NR != 1) printf(", "); printf("%s", $0)}' | sed 's/,,/,/g'
+ls -1p | sort -f | awk  | sed 's/,,/,/g'
