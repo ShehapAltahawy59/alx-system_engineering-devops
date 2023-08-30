@@ -1,2 +1,2 @@
 #!/bin/bash
-ls -1p | sort -f | awk  | sed 's/,,/,/g'
+ls -dmX
