@@ -1,3 +1,5 @@
+#!/usr/bin/pup
+# install flask from pip3.
 class flask {
   package { 'python3-pip':
     ensure => installed,
@@ -10,3 +12,4 @@ class flask {
 }
 
 include flask
+
