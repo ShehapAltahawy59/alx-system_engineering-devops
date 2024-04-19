@@ -5,6 +5,4 @@ package { 'flask':
   require    => Package['python3-pip'],
 }
 
-package { 'Werkzeug':
-  ensure   => installed,
-}
+
