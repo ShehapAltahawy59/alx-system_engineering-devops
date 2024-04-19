@@ -1,4 +1,6 @@
-#Kills a process named killmenow
-exec{'pip3 install flask 2.0.1':
-path  => '/usr/bin/:/usr/local/bin/:/bin/'
+# 1-install_a_package.pp
+
+package { 'Flask':
+  ensure   => '2.1.0',
+  provider => 'pip3',
 }
