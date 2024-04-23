@@ -17,8 +17,8 @@ sudo service nginx start
 sudo ufw allow 'Nginx HTTP'
 
 # # Give the user ownership to website files for easy editing
-# sudo chown -R "$USER":"$USER" /var/www/html
-# sudo chmod -R 755 /var/www
+sudo chown -R "$USER":"$USER" /var/www/html
+sudo chmod -R 755 /var/www
 
 # # Backup default index
 # cp /var/www/html/index.nginx-debian.html /var/www/html/index.nginx-debian.html.bckp
