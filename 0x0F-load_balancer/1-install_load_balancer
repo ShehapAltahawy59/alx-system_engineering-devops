@@ -34,5 +34,5 @@ echo "
         server 516997-web-01 54.237.101.82 check
         server 516997-web-02 18.235.243.156 check
         " >haproxy.cfg
-sudo mv -f haproxy.cfg /etc/haproxy/
+sudo mv -f haproxy.cfg /etc/haproxy
 sudo systemctl restart haproxy
