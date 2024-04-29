@@ -1,47 +1,16 @@
-# Install Nginx
-package { 'nginx':
+# install and configure nginx
+exec {'update':
+  command => '/usr/bin/apt-get update',
+}
+-> package { 'nginx':
   ensure => installed,
 }
-
-# Set up the default Nginx configuration
-file { '/etc/nginx/sites-available/default':
-  content => "
-    server {
-        listen 80 default_server;
-        listen [::]:80 default_server;
-
-        root /var/www/html;
-        index index.html;
-
-        location /redirect_me {
-            return 301 https://www.youtube.com/watch?v=QH2-TGUlwu4;
-        }
-
-        error_page 404 /404.html;
-        location = /404.html {
-            internal;
-        }
-
-        add_header X-Served-By \$hostname;
-    }
-  ",
-  require => Package['nginx'],
+-> file_line { 'header_served_by':
+  path  => '/etc/nginx/sites-available/default',
+  match => '^server {',
+  line  => "server {\n\tadd_header X-Served-By \"${hostname}\";",
+  multiple => false,
 }
-
-# Create the HTML files
-file { '/var/www/html/index.html':
-  content => 'Hello World!',
-  require => Package['nginx'],
-}
-
-file { '/var/www/html/404.html':
-  content => "<p>Ceci n'est pas une page</p>",
-  require => Package['nginx'],
-}
-
-# Restart Nginx service
-service { 'nginx':
-  ensure => running,
-  enable => true,
-  require => File['/etc/nginx/sites-available/default'],
+-> exec {'run':
+  command => '/usr/sbin/service nginx restart',
 }
