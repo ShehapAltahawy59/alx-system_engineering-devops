@@ -9,7 +9,7 @@ sudo mv index.html /var/www/html
 
 
 echo "<p>Ceci n'est pas une page<p>" > 404.html
-sudo mv 404.html /var/www/html
+sudo mv -f 404.html /var/www/html
 echo "server {
    listen 80 default_server;
    listen [::]:80 default_server;
