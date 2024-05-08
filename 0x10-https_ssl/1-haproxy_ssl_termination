@@ -1,33 +1,30 @@
 global
-        log /dev/log    local0
-        log /dev/log    local1 notice
-        chroot /var/lib/haproxy
-        stats socket /run/haproxy/admin.sock mode 660 level admin expose-fd listeners
-        stats timeout 30s
-        user haproxy
-        group haproxy
-        daemon
+    log 127.0.0.1 local0 notice
+    maxconn 2000
+    user haproxy
+    group haproxy
+    ssl-dh-param-file /etc/haproxy/dhparams.pem
 
-        # Default SSL material locations
-        ca-base /etc/ssl/certs
-        crt-base /etc/ssl/private
+defaults
+    log     global
+    mode    http
+    option  httplog
+    option  dontlognull
+    retries 3
+    option redispatch
+    timeout connect  5000
+    timeout client  10000
+    timeout server  10000
 
-        # See: https://ssl-config.mozilla.org/#server=haproxy&server-version=2.0.3&config=intermediate
-        ssl-default-bind-ciphers ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384
-        ssl-default-bind-ciphersuites TLS_AES_128_GCM_SHA256:TLS_AES_256_GCM_SHA384:TLS_CHACHA20_POLY1305_SHA256
-        ssl-default-bind-options ssl-min-ver TLSv1.2 no-tls-tickets
-        ssl-dh-param-file /etc/haproxy/dhparams.pem
-frontend myfrontend
-        mode http
-
-        # Receive HTTP traffic on all IP addresses assigned to the server at port 80
-        bind *:80
-        bind *:443 ssl crt /etc/haproxy/certs/www.alkyan20solar.tech.pem
-        redirect scheme https code 301 if !{ ssl_fc }
-        default_backend web_servers
-
-        backend web_servers
-        mode http
-        balance roundrobin
-        server 516997-web-01 54.237.101.82 check
-        server 516997-web-02 18.235.243.156 check
+listen hbnb
+    bind 0.0.0.0:80
+    bind *:443 ssl crt /etc/haproxy/certs/www.alkyan20solar.tech.pem
+    redirect scheme https code 301 if !{ ssl_fc }
+    mode http
+    stats enable
+    stats uri /haproxy?stats
+    balance roundrobin
+    option httpclose
+    option forwardfor
+    server 516997-web-01 54.237.101.82:80 check
+    server 516997-web-02 18.235.243.156:80 check
