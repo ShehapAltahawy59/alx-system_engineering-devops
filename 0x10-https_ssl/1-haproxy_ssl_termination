@@ -1,22 +1,9 @@
-#!/usr/bin/env bash
-# Installs HAProxy version 1.8 with the following configurations:
-#+    Enables management via the init script.
-#+    Distributes requests using a round-robin algorithm.
-
-apt-get install -y software-properties-common
-add-apt-repository -y ppa:vbernat/haproxy-1.8
-apt-get update
-apt-get install -y haproxy=1.8.\*
-
-echo "ENABLED=1" >> /etc/default/haproxy
-mv /etc/haproxy/haproxy.cfg{,.original}
-touch /etc/haproxy/haproxy.cfg
-
-printf %s "global
+global
     log 127.0.0.1 local0 notice
     maxconn 2000
     user haproxy
     group haproxy
+    ssl-dh-param-file /etc/haproxy/dhparams.pem
 
 defaults
     log     global
@@ -31,6 +18,8 @@ defaults
 
 listen hbnb
     bind 0.0.0.0:80
+    bind *:443 ssl crt /etc/haproxy/certs/www.alkyan20solar.tech.pem
+    redirect scheme https code 301 if !{ ssl_fc }
     mode http
     stats enable
     stats uri /haproxy?stats
@@ -39,6 +28,3 @@ listen hbnb
     option forwardfor
     server 516997-web-01 54.237.101.82:80 check
     server 516997-web-02 18.235.243.156:80 check
-" >> /etc/haproxy/haproxy.cfg
-
-service haproxy start
