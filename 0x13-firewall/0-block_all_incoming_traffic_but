@@ -1,0 +1,11 @@
+# Default rules: deny all incoming traffic, allow all outgoing traffic
+sudo ufw default deny incoming
+sudo ufw default allow outgoing
+
+# Allow incoming traffic on TCP ports 22 (SSH), 443 (HTTPS/SSL), and 80 (HTTP)
+sudo ufw allow 22/tcp
+sudo ufw allow 443/tcp
+sudo ufw allow 80/tcp
+
+# Enable ufw
+sudo ufw enable
