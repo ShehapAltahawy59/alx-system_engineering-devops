@@ -1,0 +1,28 @@
+Postmortem
+Issue Summary
+On June 1, 2024, from 10:00 AM to 2:00 PM GMT, our web application experienced a 4-hour outage. During this time, approximately 60% of our users were unable to access the service. The root cause was a misconfiguration in our load balancer that led to an overload on one of our servers.
+
+Timeline
+10:00 AM: The issue was first detected when our monitoring system alerted us about high latency and error rates.
+10:15 AM: Initial investigation showed that one of our servers was overloaded.
+10:30 AM: We assumed the issue was due to a sudden increase in traffic and scaled up our servers.
+11:00 AM: The issue persisted even after scaling up, leading us to investigate other potential causes.
+11:30 AM: We discovered that the load was not being evenly distributed among our servers.
+12:00 PM: The incident was escalated to our network team.
+1:00 PM: The network team identified a misconfiguration in the load balancer.
+2:00 PM: The misconfiguration was fixed, and the service was restored.
+Root Cause and Resolution
+The root cause of the issue was a misconfiguration in our load balancer. Instead of distributing the load evenly among all servers, it was directing a majority of the traffic to one server, causing it to become overloaded. The issue was resolved by correcting the configuration in the load balancer and redistributing the load evenly among all servers.
+
+Corrective and Preventative Measures
+To prevent this issue from happening again, we need to improve our infrastructure and processes:
+
+Infrastructure: Implement a more robust load balancing solution that can automatically detect and handle misconfigurations.
+Monitoring: Enhance our monitoring system to detect uneven load distribution among servers.
+Processes: Establish a process for regular review and audit of our network configurations.
+Specific tasks to address these improvements include:
+
+Patch the current load balancer and add auto-detection for misconfigurations.
+Add monitoring metrics for server load distribution.
+Schedule quarterly network configuration audits.
+By implementing these measures, we aim to prevent similar incidents in the future and improve our service reliability. We apologize for any inconvenience caused and appreciate your understanding.
