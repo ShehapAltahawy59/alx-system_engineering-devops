@@ -1,10 +1,11 @@
-# Fixing the number of failed requests to get to 0
-exec { 'fix--for-nginx':
-  command => "sed -i 's/worker_processes 4;/worker_processes 7;/g' /etc/nginx/nginx.conf; ",
-  path    => ['/bin', '/usr/bin', '/usr/sbin']
+#  fix our stack so that we get to 0
+file { 'replace last line':
+    ensure  => present,
+    path    => '/etc/default/nginx',
+    content => 'ULIMIT="-n 4096"',
 }
-# Restart Nginx
-exec { 'nginx-restart':
-  command => 'nginx restart',
-  path    => '/etc/init.d/'
+
+service { 'nginx':
+    ensure    => running,
+    subscribe => File['/etc/default/nginx']
 }
